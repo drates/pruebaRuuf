@@ -1,6 +1,10 @@
+from typing import List, Tuple, Dict
+import json
+
 #Función para calcular máximo de paneles que caben por techo
 #Compara unidades que caben en distintas orientaciones (llenando espacio sobrante)
-def calculate_panels(a: int, b: int, x: int, y: int) -> int:
+def calculate_panels(a: int, b: int, 
+                    c: int, d: int) -> int:
     """
     a, b: dimensiones del panel
     x, y: dimensiones del techo
@@ -40,3 +44,45 @@ def calculate_panels(a: int, b: int, x: int, y: int) -> int:
     # Comparamos si conviene más empezar con el panel orientado por defecto (a, b) 
     # o rotado (b, a) desde el inicio
     return max(solve(a, b, x, y), solve(b, a, x, y))
+
+#Código para ejecutar test_cases importados
+def run_tests() -> None:
+    with open('test_cases.json', 'r') as f:
+        data = json.load(f)
+        test_cases: List[Dict[str, int]] = [
+            {
+                "panel_w": test["panelW"],
+                "panel_h": test["panelH"],
+                "roof_w": test["roofW"],
+                "roof_h": test["roofH"],
+                "expected": test["expected"]
+            }
+            for test in data["testCases"]
+        ]
+    
+    print("Corriendo tests:")
+    print("-------------------")
+    
+    for i, test in enumerate(test_cases, 1):
+        result = calculate_panels(
+            test["panel_w"], test["panel_h"], 
+            test["roof_w"], test["roof_h"]
+        )
+        passed = result == test["expected"]
+        
+        print(f"Test {i}:")
+        print(f"  Panels: {test['panel_w']}x{test['panel_h']}, "
+              f"Roof: {test['roof_w']}x{test['roof_h']}")
+        print(f"  Expected: {test['expected']}, Got: {result}")
+        print(f"  Status: {'✅ PASSED' if passed else '❌ FAILED'}\n")
+
+
+def main() -> None:
+    print("🐕 Wuuf wuuf wuuf 🐕")
+    print("================================\n")
+    
+    run_tests()
+
+
+if __name__ == "__main__":
+    main()
